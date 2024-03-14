@@ -13,7 +13,6 @@ number-sections: true
 bibliography: references.bib
 ---
 
-
 ```{r}
 #| include: false
 #| warning: false
@@ -34,6 +33,7 @@ library(tidybayes)
 ```
 
 
+
 # Introduction
 
 
@@ -49,6 +49,7 @@ The raw data is published by Cooperative Election Study, a national stratified s
 ## Cleaned data
 Since the data constructed contained 600+ variables, only the demographics and social economics variables, which are gender, education level, and household income, were selected to analyze the effect of demographics on voters' preferences. To identify who the voters prefer in the 2020 election, it is important to select only the survey participants who registered to vote. Moreover, since the 2 most popular candidates in the 2020 presidential election are Trump, the representative candidate of the Republican Party, and Biden, the representative of the Democratic Party, only the participants who voted for either candidate will be selected for simplicity. Furthermore, some data points had missing attributes whereby an  “NA” was put in place of the true value. Such entries were removed entirely in the data cleaning process as the number of observations was large and removing those entries won’t have a significant impact on the outcome. The data now has 43,547 observations and 4 variables: candidates they voted for, gender, education level, and household income level. All 4 variables are factors variables and will further be explored below.
 
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -59,6 +60,7 @@ voting_data <- read.csv("~/Effect-of-voter-demographics-on-candidate-preference/
 kable(head(voting_data ),
   align = "c")
 ```
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -79,11 +81,13 @@ voting_data <- voting_data |>
 summary_stats <- kable(summary(voting_data), align = "c")
 summary_stats
 ```
+
 ### Preference of candidates: 
 The variable “vote_ for” represents the candidate the survey participants voted for during the 2020 presidential elections. The participants either voted for Trump or Biden. (Table 2) shows summary statistics of the clean data. It shows that 17,555 survey participants voted for Trump which was approximately 40.3% of the voters while 25,992 people voted for Biden which was around 59.7% of voters. 
 
 ### Voters Demographics: 
 #### Gender. 
+
 
 ```{r}
 #| echo: false
@@ -103,10 +107,12 @@ voting_data |>
   theme(legend.position = "bottom")
 ```
 
+
 The gender of survey participants will take values of either “Male” or “ Female”. Out of the 43,547 survey participants, 19,248 were male and 24,299 were female. (Graph 1) shows a bar graph of who respondents vote for, grouped by gender. It is shown that around 36.4% of female participants voted for Trump while 63.6% voted for Biden. For their male counterparts, while 45.3% of male participants voted for Trump, 54.7% of male respondents voted for Biden. These number indicates that female voters are more likely to vote for Biden than male voters. However, this evidence is inconclusive and needs further testing to conclude the relationship between voters’ choice of candidate and their gender. 
 
 #### Education level. 
  Participants' education level is divided into 6 groups: No High School, High school graduates, some colleges, 2 years of college, 4 years of college, and post-grad. As shown in the summary statistics, there are 687 out of 43,547 respondents who have not finished high school, and 9810 participants are high school graduates.  Additionally, 9290 respondents have some college education, and 4970 have finished 2 years of college. Out of 43,547 participants, the largest group consists of individuals with a 4-year college degree, totaling 11,518 respondents. Finally, the group with the highest level of education is post-grads with 7272 respondents. 
+
 
 ```{r}
 #| echo: false
@@ -127,6 +133,7 @@ voting_data |>
   theme(legend.position = "bottom")
 ```
 
+
 Graph 2 is a bar graph illustrating the candidates respondents vote for grouped by gender and education level. Overall, it is found that for the most part, females with higher education levels are more likely to vote for Biden while there is no clear trend in male counterparts.   It shows that 51.8% of male participants with no high school experience voted for Trump while only 48.2% voted for Biden. However, 47.5% of female respondents with no high school experience voted for Trump while 52.5% voted for Biden. The graph also demonstrates that 51.4% of female high school graduate participants voted for Trump while 57.3% of male high school graduate respondents voted for Trump. Interestingly, it is found that high school graduates, regardless of gender, are more likely to vote for Trump than Biden. Furthermore, Graph 2 shows that 51.5% of male participants with 2 years of college voted for Trump and 48.9% voted for Biden. However, 39.1% of female participants coming from the same educational background voted for Trump while 60.9% voted for Biden. Additionally, 35.6% of female respondents with some college experience voted for Trump while 48.3% of their male counterparts voted for Trump. The bar graphs also show that  28.6% of female respondents with 4-year college graduates voted for Trump while 40.1% of the male participants with the same educational level voted for Trump. Lastly, 34% of post-grads male participants voted for Trump while only 20.7% of the female counterparts voted for Trump. These statistics not only show that females are less likely to vote for Trump than males but also show that in general, but it also demonstrates that people with higher education levels are more likely to vote for Biden. 
 
 # Model 
@@ -138,6 +145,7 @@ The dependent variable y represents the political preference of the respondent a
 i is the probability that the ith respondent voted for Biden. Moreover, it is assumed that the distribution of coefficients B0, B1, and B2 are normal distributions with a mean of 0 and standard deviations of 2.5. This assumption is made as the model follows a Bayesian framework which allows us to incorporate prior information into the model. Assuming that the distribution of coefficients B0, B1, and B2 follows a normal distribution allows for a weakly informative prior which implies a neutrality on the possible value of the coefficients. Mean centering around 0 implies that there is no bias in the direction of all coefficients and a standard deviation of 2.5 allows for a moderate level of variation in the predictor variable. Furthermore, this assumption also prevents overfitting of the model by constraining the coefficients to reasonable values. 
 
 # Result 
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -163,7 +171,6 @@ modelsummary(
 
 ```
 
-
 ```{r}
 #| echo: false
 #| warning: false
@@ -176,5 +183,4 @@ modelsummary(
   statistic = "mad"
   )
 ```
-
 
