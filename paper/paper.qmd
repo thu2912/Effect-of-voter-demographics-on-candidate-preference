@@ -13,18 +13,6 @@ number-sections: true
 bibliography: references.bib
 ---
 
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-library(tidyverse)
-library(palmerpenguins)
-```
-
-
-# Introduction
-
 
 ```{r}
 #| include: false
@@ -77,6 +65,19 @@ kable(head(voting_data ),
 #| echo: false
 #| warning: false
 #| message: false
+voting_data <- voting_data |> 
+  mutate(voted_for = as_factor(voted_for), 
+      gender = as_factor(gender),
+      education = factor(education,
+      levels = c(
+        "No HS",
+        "High school graduate",
+        "Some college",
+        "2-year",
+        "4-year",
+        "Post-grad")
+      ))|>
+  select(voted_for, gender, education)
 summary_stats <- summary(voting_data)
 summary_stats
 ```
@@ -160,4 +161,5 @@ modelsummary(
   statistic = "mad"
   )
 ```
+
 
