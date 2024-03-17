@@ -68,6 +68,9 @@ kable(head(voting_data ),
   align = "c")
 ```
 
+The variable in the data set is measured by using the results of the survey conducted pre and post-election. All 3 variables used are categorical. Preference for candidates is measured by whether the person is reported to vote for Trump or Biden. Other candidates running in the 2020 election were not considered. Additionally, gender is measured by the categorical variable Male or Female. No other gender was included in the data set. Finally, education is measured by 6 different categories that will be discussed below.
+
+
 ```{r}
 #| label: tbl-summarystats
 #| tbl-cap: Summary statistics of voters demographics and choice of candidate in 2020 presidential election
