@@ -2,9 +2,7 @@
 
 ## Overview
 
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
-
-To use this folder, click the green "Code" button", then "Download ZIP". Move the downloaded folder to where you want to work on your own computer, and then modify it to suit.
+Voters' preference of candidates running for president and their backgrounds have a significant impact on the political landscape. We are particularly interested in the potential relationship between voters’ demographics, specifically gender and education, on their choices of candidate. This relation has been analyzed in numerous studies throughout the years and different results have been found. Given the scarce empirical evidence that exists regarding this topic, our paper looks at the relation between gender, education, and choices of candidates using the 2020 US presidential election data. We observed a statistically and economically significant that females are more likely to support Democrat representative candidates like Biden. Additionally, we witnessed how an increase in educational level affects the choice of candidates while the effect differs between two genders. Finally, we acknowledged the potential limitations and threats to the internal and external validity of our results
 
 
 ## File Structure

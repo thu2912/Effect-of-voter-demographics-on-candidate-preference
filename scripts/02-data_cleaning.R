@@ -1,11 +1,11 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans the raw plane data downloaded directly online
+# Author: Thu Dong
+# Date: 11 March 2024
+# Contact: thu.dong@mail.utoronto.ca
 # License: MIT
 # Pre-requisites:Install all packages needed
-# Any other information needed? [...UPDATE THIS...]
+
 
 #### Workspace setup ####
 library(tidyverse)
