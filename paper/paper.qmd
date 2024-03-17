@@ -1,14 +1,12 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
-author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+title: "Empirical evidinces of gender gap and education gap in choice of candidate in 2020 US  presidential elections"
+author: "Thu Dong"
+thanks: "Code and data are available at: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/E9N6PH."
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "Voters' preference of candidates running for president and their backgrounds have a significant impact on the political landscape. We are particularly interested in the potential relationship between voters’ demographics, specifically gender and education, on their choices of candidate. This relation has been analyzed in numerous studies throughout the years and different results have been found. Given the scarce empirical evidence that exists regarding this topic, our paper looks at the relation between gender, education, and choices of candidates using the 2020 US presidential election data. We observed a statistically and economically significant that females are more likely to support Democrat representative candidates like Biden. Additionally, we witnessed how an increase in educational level affects the choice of candidates while the effect differs between two genders. Finally, we acknowledged the potential limitations and threats to the internal and external validity of our results."
 format: pdf
+toc: true
 number-sections: true
 bibliography: references.bib
 ---
@@ -33,23 +31,33 @@ library(rstanarm)
 library(tidybayes)
 ```
 
+\newpage
 
-# Introduction
+# Introduction {#sec-introduction}
 
+The political scene is shaped by various factors and one of the most important factors that affect the outcome of elections is the demographics of voters. Understanding how the demographics of the voting population influence their candidate choices allows candidates to adjust political campaigns and policies. Therefore, this paper will discuss the effect of voters’ demographics on the candidate they choose with empirical evidence and the implication of this effect on the outcome of the elections. 
+
+According to a 2023 Center for American Women and Politics study, there is a gender gap in voting which refers to a difference between the percentage of women and the percentage of men voting for a given candidate, generally the winning candidate [@rutgers_gender_gap]. The study, conducted in the US, shows that one of the reasons the gender gap in voting exists is because the majority of women have preferred Democratic candidates. The evidence was found in the 1996 election, 2000 election, and 2008 election. Additionally, the same study shows that in the 2016 elections that shows that voters with a college degree or higher education are more likely to vote for the Democrat party representatives than those who do not have a college degree.[@pew_research_educational_divide]
+
+This paper will examine the influence of voters’ demographics, specifically gender and education level, on voters’ preference of candidates as they are shown to have a growing significance in election outcomes. Since no previous study on real data regarding this topic, this research aims to provide additional empirical evidence to this topic and explore how different demographics respond to candidates’ campaigns, policies, and political views. Additionally, this paper target to contribute a deeper understanding of the population’s view of the political landscape and the impact of population preference on presidential outcomes. Using the 2020 presidential election data provided by CCES in Harvard Dataverse, this paper found that there is empirical evidence that shows that the gender gap and education gap in voting exist and they exist mainly because of politician’s proposals of policies during campaigns and party affiliation.   
+
+The estimand of the paper is the true relationship between voters’ demographics, specifically gender, and education, on their choices of candidate. The remainder of this paper is structured as follows. @sec-data discusses the raw data, cleaning process, summary statistics, and visualization of the predictors. @sec-model shows the model used for empirical analysis and the rationale behind the model. @sec-result analyze the results of the models. Finally,@sec-discussion examines the implication of the findings on political scenes, the limitations of the research, and further steps to improve the reliability of the research. 
 
 
 
 # Data {#sec-data}
 
 ## Raw data. 
-The data used in this paper is derived from CCES in Havard DataVerse. This was the final version of the 2020 Cooperative Election Study Common Content dataset. All the data analysis was done through R (R Core Team 2023) with the aid of the following packages: …..
+The data used in this paper is derived from CCES in Havard DataVerse. This was the final version of the 2020 Cooperative Election Study Common Content dataset. All the data analysis was done through R [@citeR] with the aid of the following packages:tideyverse [@tidyverse],boot [@boot],broom.mixed[@broommixed],collapse[@rcollapse],knitr[@knitr], dataverse[@dataverse], gutenbergr[@gutenbergr],janitor[@janitor], marginaleffects[@marginaleffects], modelsummary[@modelsummary], rstanarm[@rstanarm],and tidybayes[@tidybayes].
 
-The raw data is published by Cooperative Election Study, a national stratified sample survey administered by YouGov. The data was gathered through two surveys: Pre-election ( September 29 to November 2, 2020) and Post-election ( November 8 to December 14, 2020). Each variable in the data set is constructed by the answer to one question inside the surveys. 600+ questions provide information on how Americans view Congress and hold their representatives accountable during elections, how they voted and their electoral experiences, and how their behavior and experiences vary with political geography and social context. The data included a large sample of 60,000+ representative Americans. The unit of observation is ‘ respondent’. 
+The raw data is published by Cooperative Election Study, a national stratified sample survey administered by YouGov. The data was gathered through two surveys: Pre-election ( September 29 to November 2, 2020) and Post-election ( November 8 to December 14, 2020) which were specifically gathered to study voters' behavior in the 2020 election. There was a total of 650 questions asked across both surveys. The surveys were completed by 60,000 American citizens. Each variable in the dataset corresponds to one of the 650 questions. The questions involved topics about their gender, race, socioeconomic status, political beliefs, etc. These questions aim to provide information on how Americans view Congress, how they voted, and how their behavior and experiences vary. The data included a large sample of 60,000+ representative Americans. The unit of observation is ‘ respondent’. 
 
 ## Cleaned data
-Since the data constructed contained 600+ variables, only the demographics and social economics variables, which are gender, education level, and household income, were selected to analyze the effect of demographics on voters' preferences. To identify who the voters prefer in the 2020 election, it is important to select only the survey participants who registered to vote. Moreover, since the 2 most popular candidates in the 2020 presidential election are Trump, the representative candidate of the Republican Party, and Biden, the representative of the Democratic Party, only the participants who voted for either candidate will be selected for simplicity. Furthermore, some data points had missing attributes whereby an  “NA” was put in place of the true value. Such entries were removed entirely in the data cleaning process as the number of observations was large and removing those entries won’t have a significant impact on the outcome. The data now has 43,547 observations and 4 variables: candidates they voted for, gender, education level, and household income level. All 4 variables are factors variables and will further be explored below.
+Since the data constructed contained 650 variables, only the demographics variables, which are gender and education level were selected to analyze the effect of demographics on voters' preferences. To identify who the voters prefer in the 2020 election, it is important to select only the survey participants who registered to vote. Moreover, since the 2 most popular candidates in the 2020 presidential election are Trump, the representative candidate of the Republican Party, and Biden, the representative of the Democratic Party, only the participants who voted for either candidate will be selected for simplicity. Furthermore, some data points had missing attributes whereby an  “NA” was put in place of the true value. Such entries were removed entirely in the data cleaning process as the number of observations was large and removing those entries will not have a significant impact on the outcome. The data now has 43,554 observations and 3 variables: candidates they voted for, gender, and education level. All 3 variables are factors variables and will further be explored below. @tbl-data shows the data after the cleaning proccess. 
 
 ```{r}
+#| label: tbl-data
+#| tbl-cap: Voters demographics and choice of candidate in 2020 presidential election
 #| echo: false
 #| warning: false
 #| message: false
@@ -59,7 +67,10 @@ voting_data <- read.csv("~/Effect-of-voter-demographics-on-candidate-preference/
 kable(head(voting_data ),
   align = "c")
 ```
+
 ```{r}
+#| label: tbl-summarystats
+#| tbl-cap: Summary statistics of voters demographics and choice of candidate in 2020 presidential election
 #| echo: false
 #| warning: false
 #| message: false
@@ -80,12 +91,14 @@ summary_stats <- kable(summary(voting_data), align = "c")
 summary_stats
 ```
 ### Preference of candidates: 
-The variable “vote_ for” represents the candidate the survey participants voted for during the 2020 presidential elections. The participants either voted for Trump or Biden. (Table 2) shows summary statistics of the clean data. It shows that 17,555 survey participants voted for Trump which was approximately 40.3% of the voters while 25,992 people voted for Biden which was around 59.7% of voters. 
+The variable “vote_ for” represents the candidate the survey participants voted for during the 2020 presidential elections. The participants either voted for Trump or Biden. @tbl-summarystats  shows summary statistics of the clean data. It shows that 17,558 survey participants voted for Trump which was approximately 40.3% of the voters while 25,996 people voted for Biden which was around 59.7% of voters. 
 
 ### Voters Demographics: 
 #### Gender. 
 
 ```{r}
+#| label: fig-fig1
+#| fig-cap:  The distribution of presidential preferences, by gender
 #| echo: false
 #| warning: false
 #| message: false
@@ -103,12 +116,13 @@ voting_data |>
   theme(legend.position = "bottom")
 ```
 
-The gender of survey participants will take values of either “Male” or “ Female”. Out of the 43,547 survey participants, 19,248 were male and 24,299 were female. (Graph 1) shows a bar graph of who respondents vote for, grouped by gender. It is shown that around 36.4% of female participants voted for Trump while 63.6% voted for Biden. For their male counterparts, while 45.3% of male participants voted for Trump, 54.7% of male respondents voted for Biden. These number indicates that female voters are more likely to vote for Biden than male voters. However, this evidence is inconclusive and needs further testing to conclude the relationship between voters’ choice of candidate and their gender. 
+The gender of survey participants will take values of either “Male” or “ Female”. Of the 43,554 survey participants, 19,251 were male and 24,303 were female. @fig-fig1 shows a bar graph of who respondents vote for, grouped by gender. It is shown that around 36.4% of female participants voted for Trump while 63.6% voted for Biden. For their male counterparts, while 45.3% of male participants voted for Trump, 54.7% of male respondents voted for Biden. These number indicates that female voters are more likely to vote for Biden than male voters. However, this evidence is inconclusive and needs further testing to conclude the relationship between voters’ choice of candidate and their gender.
 
 #### Education level. 
- Participants' education level is divided into 6 groups: No High School, High school graduates, some colleges, 2 years of college, 4 years of college, and post-grad. As shown in the summary statistics, there are 687 out of 43,547 respondents who have not finished high school, and 9810 participants are high school graduates.  Additionally, 9290 respondents have some college education, and 4970 have finished 2 years of college. Out of 43,547 participants, the largest group consists of individuals with a 4-year college degree, totaling 11,518 respondents. Finally, the group with the highest level of education is post-grads with 7272 respondents. 
-
+ Participants' education level is divided into 6 groups: No High School, High school graduates, some colleges, 2 years of college, 4 years of college, and post-grad as shown in @tbl-summarystats. There are 689 out of 43,554 respondents who have not finished high school, and 9814 participants are high school graduates.  Additionally, 9290 respondents have some college education, and 4971 have finished 2 years of college. Out of 43,554 participants, the largest group consists of individuals with a 4-year college degree, totaling 11,518 respondents. Finally, the group with the highest level of education is post-grads with 7272 respondents. 
 ```{r}
+#| label: fig-fig2
+#| fig-cap:  The distribution of presidential preferences, by gender and educational level
 #| echo: false
 #| warning: false
 #| message: false
@@ -127,17 +141,46 @@ voting_data |>
   theme(legend.position = "bottom")
 ```
 
-Graph 2 is a bar graph illustrating the candidates respondents vote for grouped by gender and education level. Overall, it is found that for the most part, females with higher education levels are more likely to vote for Biden while there is no clear trend in male counterparts.   It shows that 51.8% of male participants with no high school experience voted for Trump while only 48.2% voted for Biden. However, 47.5% of female respondents with no high school experience voted for Trump while 52.5% voted for Biden. The graph also demonstrates that 51.4% of female high school graduate participants voted for Trump while 57.3% of male high school graduate respondents voted for Trump. Interestingly, it is found that high school graduates, regardless of gender, are more likely to vote for Trump than Biden. Furthermore, Graph 2 shows that 51.5% of male participants with 2 years of college voted for Trump and 48.9% voted for Biden. However, 39.1% of female participants coming from the same educational background voted for Trump while 60.9% voted for Biden. Additionally, 35.6% of female respondents with some college experience voted for Trump while 48.3% of their male counterparts voted for Trump. The bar graphs also show that  28.6% of female respondents with 4-year college graduates voted for Trump while 40.1% of the male participants with the same educational level voted for Trump. Lastly, 34% of post-grads male participants voted for Trump while only 20.7% of the female counterparts voted for Trump. These statistics not only show that females are less likely to vote for Trump than males but also show that in general, but it also demonstrates that people with higher education levels are more likely to vote for Biden. 
+@fig-fig2 is a bar graph illustrating the candidates respondents vote for grouped by gender and education level. Overall, it is found that for the most part, females with higher education levels are more likely to vote for Biden while there is no clear trend in male counterparts.   It shows that 51.8% of male participants with no high school experience voted for Trump while only 48.2% voted for Biden. However, 47.5% of female respondents with no high school experience voted for Trump while 52.5% voted for Biden. The graph also demonstrates that 51.4% of female high school graduate participants voted for Trump while 57.3% of male high school graduate respondents voted for Trump. Interestingly, it is found that high school graduates, regardless of gender, are more likely to vote for Trump than Biden. Furthermore, @fig-fig2 shows that 51.5% of male participants with 2 years of college voted for Trump and 48.9% voted for Biden. However, 39.1% of female participants from the same educational background voted for Trump while 60.9% voted for Biden.
+Additionally, 35.6% of female respondents with some college experience voted for Trump while 48.3% of their male counterparts voted for Trump. The bar graphs also show that  28.6% of female respondents with 4-year college graduates voted for Trump while 40.1% of the male participants with the same educational level voted for Trump. Lastly, 34% of post-grads male participants voted for Trump while only 20.7% of the female counterparts voted for Trump. These statistics not only show that females are less likely to vote for Trump than males but also show that in general, but it also demonstrates that people with higher education levels are more likely to vote for Biden. 
 
-# Model 
+# Model {#sec-model}
 The model used to analyze the relationship between the candidate respondents vote for and voters' demographics is logistics regression. Logistics regression provides a framework to analyze categorical outcome variables. Furthermore, logistics regression shows the probability of the occurrence of an event which is suitable for analyzing binary variables such as ones in our research. 
-The model that we are interested in is ( something similar but b3 will be the coefficient of the interaction terms) 
 
-The dependent variable y represents the political preference of the respondent and is equal to 1 if Biden and 0 if Trump, Gender_iis the gender of the respondent with 1 equal to female and 0 if male and education_i is the education of the respondent. Additionally, Gender_i*education_i, which is the interaction term of gender and education, was included to enhance the accuracy of the model and account for the conditional relationship between the two independent variables. 
 
-i is the probability that the ith respondent voted for Biden. Moreover, it is assumed that the distribution of coefficients B0, B1, and B2 are normal distributions with a mean of 0 and standard deviations of 2.5. This assumption is made as the model follows a Bayesian framework which allows us to incorporate prior information into the model. Assuming that the distribution of coefficients B0, B1, and B2 follows a normal distribution allows for a weakly informative prior which implies a neutrality on the possible value of the coefficients. Mean centering around 0 implies that there is no bias in the direction of all coefficients and a standard deviation of 2.5 allows for a moderate level of variation in the predictor variable. Furthermore, this assumption also prevents overfitting of the model by constraining the coefficients to reasonable values. 
+## Simple regression: 
+Simple regression was used as a guideline to examine the relationship between gender and choice of candidates.
 
-# Result 
+
+$$
+\begin{aligned}
+y_i|\pi_i & \sim \mbox{Bern}(\pi_i) \\
+\mbox{logit}(\pi_i) & = \beta_0 + \beta_1*gender \\
+\beta_0 & \sim \mbox{Normal}(0, 2.5)\\
+\beta_1 & \sim \mbox{Normal}(0, 2.5)\\
+\end{aligned}
+$$
+
+
+## Multiple regression: 
+Multiple regression was used to deepen analysis and include the effect of educational level on voting choices. 
+
+
+$$
+\begin{aligned}
+y_i|\pi_i & \sim \mbox{Bern}(\pi_i) \\
+\mbox{logit}(\pi_i) & = \beta_0 + \beta_1*gender + \beta_2*education + \beta_3*gender*education\\
+\beta_0 & \sim \mbox{Normal}(0, 2.5)\\
+\beta_1 & \sim \mbox{Normal}(0, 2.5)\\
+\beta_2 & \sim \mbox{Normal}(0, 2.5)\\
+\beta_3 & \sim \mbox{Normal}(0, 2.5)
+\end{aligned}
+$$
+The dependent variable $y_i$ represents the political preference of the respondent and is equal to 1 if Biden and 0 if Trump, $gender_i$ is the gender of the respondent with 1 equal to female and 0 if male and $education_i$ is the education of the respondent. Additionally, $gender_i$*$education_i$, which is the interaction term of gender and education, was included to enhance the accuracy of the model and account for the conditional relationship between the two independent variables. 
+
+$\pi_i$ is the probability that the ith respondent voted for Biden. Moreover, it is assumed that the distribution of coefficients $\beta_0$, $\beta_1$, $\beta_2$, and $\beta_3$ are normal distributions with a mean of 0 and standard deviations of 2.5. This assumption is made as the model follows a Bayesian framework which allows us to incorporate prior information into the model. Assuming that the distribution of coefficients $\beta_0$, $\beta_1$, $\beta_2$, and $\beta_3$ follows a normal distribution allows for a weakly informative prior which implies a neutrality on the possible value of the coefficients. Mean centering around 0 implies that there is no bias in the direction of all coefficients and a standard deviation of 2.5 allows for a moderate level of variation in the predictor variable. Furthermore, this assumption also prevents overfitting of the model by constraining the coefficients to reasonable values. 
+
+# Result {#sec-result}
 ```{r}
 #| echo: false
 #| warning: false
@@ -151,6 +194,8 @@ political_preferences <-
 ```
 
 ```{r}
+#| label: tbl-reg1
+#| tbl-cap:  Regression of gender on choice of candidates.
 #| echo: false
 #| warning: false
 #| message: false
@@ -163,8 +208,11 @@ modelsummary(
 
 ```
 
+@tbl-reg1 above shows the regression of gender on the voting choice of survey participants. The intercept is 0.528 which represents the log odds of female participants supporting Biden. This number indicates that the probability that female participants supporting Biden is, on average, 1.7 times more than they supporting Trump. The log odds decrease for males as the coefficient is −0.340, which shows that the odds that male respondents support Biden are less than Female participants. It is found that the probability that the male participants support Biden is 1.26 times they support Trump. @tbl-reg1 shows empirical evidence that female participants overall are more likely to support Biden than male participants. 
 
 ```{r}
+#| label: tbl-reg2
+#| tbl-cap:  Regression of gender and education on choice of candidates.
 #| echo: false
 #| warning: false
 #| message: false
@@ -176,5 +224,28 @@ modelsummary(
   statistic = "mad"
   )
 ```
+@tbl-reg2 demonstrates the effect of gender and education on voting choices. The intercepts represent the log odds of supporting Biden for female participants with 2 years of college experience which is 0.151, illustrating that the female participants with 2 years of college experience supporting Biden is approximately 16% more than those supporting Trump. However, with a B_1 of -0.312, on average, the odds of a male with 2 years of college experience supporting Biden is 0.312 less than a female with the same education level. 
+
+It was also found that females with an education level below an associate degree( except in some colleges) tend to vote less for Biden. The odds of females with a high school degree voting for Biden decreased by 0.477 compared to females with associate degrees. This number decreases even further when considering females with below-average education levels. Compared to females with an associate degree, the odds of females with no high school degree supporting Biden is on average 0.668 lower. Remarkably, the odds of a male with a high school degree voting for Biden is 0.056 higher than the odds of a female with the same education level voting for Biden while the difference is minimal. Notably, the odds of males with no high school degree voting for Biden are 32.837 lower compared to females with no high school degree which is a significant decrease. 
+
+Evidence also shows that female voters with higher education levels tend to support Biden more. Females with some college education have higher odds of supporting Biden than females with associate degrees, specifically 0.677 higher. Furthermore, the odds of females with 4 years of college education supporting Biden is 1.083 higher than females with 2 years of college education which indicates that the higher the education the women have, they are more likely to support Liberal candidates as discussed in the literature review. Notably, compared to females with associate degrees, the odds of females with post-graduation educations voting for Biden are 0.770 higher. On the other hand, the higher education level has a slightly different effect on their voting preference. It was found that the effect of education on males’ voting behavior is much smaller. Compared to male voters with associate degrees, the odds that males with some college degrees support Biden is 0.363 higher. Additionally, the odds of men with 4 years of college education vote for Biden is 0.613 higher than the odds of supporting Biden for males with 2 years of college education. The odds of males voting for Biden with post Grad education is 0,575 higher than the odds of supporting Biden for males with 2 years of college education
 
 
+# Discussion {#sec-discussion}
+This paper has not only shown the existence of the gender gap and education gap in voting using empirical evidence, but it was also found that gender and education have a significant effect on the outcome of the election which illustrates that appealing to certain demographics can significantly change the outcome of the election. 
+
+## The gender gap in election 2020: 
+As it has been shown @tbl-reg1 and @fig-fig1, even though, male voters are more likely to vote for Biden, female voters support Biden with a higher margin than men. One of the potential reasons why Biden is favored in the 2020 election is because of gender-related policies that he proposed during his presidential campaign.  For example, Biden issued policies for reproductive rights, paternity leave, and pay equity which support women’s rights(The White House 2022). These proposals in the campaign increase the possibility that women will vote for Biden. Moreover, another reason why women are more likely to support Biden is because of his stance on social issues. It is believed that Biden has an empathetic attitude towards gender equality, LGBTQ+ rights, and racial justice which allows both genders to support him more. Lastly, Trump’s policies in his previous presidency could be a reason why he gained less support from the public. Specifically, his rhetoric and behavior during his precedency could have driven female voters to seek an alternative candidacy in Biden. 
+
+## The education gap in voting preferences: 
+@fig-fig2 shows clearly the education gap in voting and how it affects each gender differently. Additionally, @tbl-reg2 provides how significant the effect of each level of education on voters’ behavior. It is found that on average, when females are more educated, they are more likely to support Biden as they are more aware of the proposal of policies and social views of Biden and how it affects them as individuals. Moreover, in the 2020 elections, while males with higher education levels are more likely to vote for Biden, the effect of education and gender is much smaller compared to females. This could also be linked to Biden’s policies that have a greater effect on female voters. This is not the first time the education gap in voting has existed. There was evidence of an education gap in presidential preference ever since 1992. According to the Pew Research Center, college graduates or more and those without college degrees have little difference in their voting choices. However, it has shown that this gap widens over time, and it is the most noticeable in 2016, especially in white voters. It was shown that white college graduates supported Clinton over Trump ( 47% Clinton vs 33% Trump) while those without a college degree supported Trump over Clinton ( 51% Trump vs 26% Clinton). (“Educational Divide in Vote Preferences on Track to Be Wider than in Recent Elections” 2016). One of the reasons why this phenomenon exists could be because of the different party affiliations in both groups. The voters who have higher educational levels are shown to be more likely to hold a Liberal view than people who have lower educational levels which indicates that they are more likely to support the Liberal Candidate. 
+
+## Limitation 
+There are certain limitations to this model that can affect the internal and external validity of the research. Firstly, one of the external validity concerns is that since the data is recorded for the 2020 presidential election, the result may not be true for elections in different years. Additionally, there could be bias in sampling as there is a specific population that did not vote or is not willing to provide information which could lead to an inconclusive result for the population. Moreover, one of the internal validity concerns is confounding variables that are correlated to the outcome variables or predictors which can cause bias in the parameters of the model 
+
+## Next step: 
+ To address the limitations of the research, we will examine the population to ensure that the data that is used to train the regression model is representative of the whole population and perform specific methods to address missing data. Additionally, we’ll perform the same analysis on data in different presidential elections to test if the result is conclusive for data in different periods. Lastly, we’ll gather other demographic factors that can affect predictors in order to address any bias in parameters. 
+
+\newpage
+
+# Reference
